@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(dobot)
 
+set(CMAKE_CXX_FLAGS "-fPIC")
+
 ## Add support for C++11, supported in ROS Kinetic and newer
 # add_definitions(-std=c++11)
 
@@ -15,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   genmsg
   geometry_msgs
 )
+find_package(dobotdll)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -50,9 +53,9 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-)
+#add_message_files(
+#  FILES
+#)
 
 ## Generate services in the 'srv' folder
 add_service_files(
@@ -204,18 +207,19 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 4)
 else()
     include_directories(
       ${catkin_INCLUDE_DIRS}
-      src/DobotDll_x64
+      ${dobotdll_INCLUDE_DIRS}
     )
 
     link_directories(
-      src/DobotDll_x64
+      ${catkin_LIBRARIES}
+      ${dobotdll_LIBRARIES}
     )
 endif()
 
 
 
 add_executable(DobotServer src/DobotServer.cpp)
-target_link_libraries(DobotServer ${catkin_LIBRARIES} DobotDll)
+target_link_libraries(DobotServer ${catkin_LIBRARIES} ${dobotdll_LIBRARIES})
 add_dependencies(DobotServer dobot_gencpp)
 
 add_executable(DobotClient_JOG src/DobotClient_JOG.cpp)
