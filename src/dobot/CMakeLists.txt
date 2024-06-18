@@ -219,6 +219,7 @@ endif()
 
 
 add_executable(DobotServer src/DobotServer.cpp)
+target_include_directories(DobotServer PRIVATE ${dobotdll_INCLUDE_DIRS})
 target_link_libraries(DobotServer ${catkin_LIBRARIES} ${dobotdll_LIBRARIES})
 add_dependencies(DobotServer dobot_gencpp)
 
